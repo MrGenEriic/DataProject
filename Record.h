@@ -33,8 +33,8 @@ public:
 
     }
 
-    any getSeat(const string&, const any&);
-    void setSeat(const string&, any);
+    any getValue(const string&, const any&);
+    void setValue(const string&, any);
 
     // Core function that determines which file type (by name) I want to read and then parses it
     // ToDo need to determine how I am going to store / insert the successfully parsed lines -- To be Considering: Store in a "middle" layer to check if it does it properly while testing somehow before sending to a fully setup "final" location

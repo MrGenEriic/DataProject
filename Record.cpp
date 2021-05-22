@@ -3,11 +3,11 @@
 //
 #include "Record.h"
 
-void Record::setSeat(const string &valueType, any value) {
+void Record::setValue(const string &valueType, any value) {
     carrierRec[valueType] = value; // todo Test this and see if it actually sets the map's value properly
 }
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------
-any Record::getSeat(const string &valueType, const any&value) {
+any Record::getValue(const string &valueType, const any&value) {
     //This should find the specific Map value via the key and then return "second" which is its value
     return carrierRec.find(valueType)->second;
 }
@@ -62,36 +62,42 @@ void Record::billgenParse() {
     // Billgen file is now opened at this point, need to begin figuring out how to parse it properly
     while(processingFile){
 
+        for (string line; getline(billgenIn, line);) {
 
-        // ToDo begin creating the parser logic here: possibly a for() where I create a string and keep it running as long as it is taking in a string -> determine how I want to handle commas that are prematurely entered etc
-        int i = 0;
-        while(i<20) {
+            stringstream ss(line);
 
-            for (string line; getline(billgenIn, line);) {
+            //Data types in order of CSV location
+            // identifier -> master_bol_number -> house_bol_number -> sub_house_bol_number -> voyage_number -> bill_type_code -> manifest_number -> trade_update_date -> run_date
 
-                stringstream ss(line);
 
-                for (string data; getline(ss, data, ',');) {
-                    cout << " " << data;
-                    // ToDo make it add the data element to the Map here once we confirm it is outputting the basic right element
+            for (string data; getline(ss, data, ',');) {
+
+                // Just highlighting the empty space areas seperated by commas and then outputting the data after any of those found
+                if (data.empty()){
+                    cout << " !!!!";
                 }
+                cout << " " << data;
 
+
+
+                // ToDo make it add the data element to the Map here
             }
 
-            if (billgenIn.eof()) {
-                cout << "End of BillGen file reached\n";
-                processingFile = false;
-                break;
-            }
-            if (billgenIn.fail()) {
-                cout << "BillGen file reached FAIL state";
-                processingFile = false;
-                //billgenIn.clear(); ToDo determine if I want to use this, is for clearing the state and assuming I handle it via where it was called
-            }
-            ++i;
+            cout << "    Line Finished--------------" << endl;
+
+        }
+
+        if (billgenIn.eof()) {
+            cout << "End of BillGen file reached\n";
+            processingFile = false;
+            break;
+        }
+        if (billgenIn.fail()) {
+            cout << "BillGen file reached FAIL state";
+            processingFile = false;
+            //billgenIn.clear(); ToDo determine if I want to use this, is for clearing the state and assuming I handle it via where it was called
         }
     }
-
 
 }
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------
